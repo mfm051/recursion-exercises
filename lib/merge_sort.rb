@@ -8,21 +8,25 @@ class Array
     [left, right]
   end
 
+  def merge(sorted_array)
+    comparison = sorted_array.dup
+
+    merged = []
+
+    each do |i|
+      merged << comparison.shift until comparison.empty? || comparison[0] > i
+
+      merged << i
+    end
+
+    merged.append(comparison).flatten
+  end
+
   def merge_sort
     return self if one?
 
     left, right = split_in_half.map(&:merge_sort)
 
-    result = []
-
-    until result.size == size
-      next result << [left.shift, right.shift].compact[0] unless [left[0], right[0]].all?
-
-      next result << right.shift if right[0] < left[0]
-
-      result << left.shift
-    end
-
-    result
+    left.merge(right)
   end
 end
